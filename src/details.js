@@ -29,22 +29,11 @@ export function getDetailsContentLayout(ymaps) {
     `
    ,
     {
-       
-
-
       build: function() {
-
-        console.log("Building layout");
 
         this.constructor.superclass.build.call(this);
 
-        console.log("Built layout");
-
-        console.log(this);
-
         const { details } = this.getData().object.properties;
-        console.log("Got details");
-        console.log(details);
         if (details) {
           const container = this.getElement().querySelector('.details-chart');
 
@@ -54,8 +43,6 @@ export function getDetailsContentLayout(ymaps) {
             details.isActive
           );
         }
-
-
 
       },
 
