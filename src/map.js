@@ -16,16 +16,31 @@ function initMap(ymaps, containerId) {
     clusterDisableClickZoom: false,
     geoObjectOpenBalloonOnClick: false,
     geoObjectHideIconOnBalloonOpen: false,
-    geoObjectBalloonContentLayout: getDetailsContentLayout(ymaps)
+//     geoObjectBalloonContentLayout: getDetailsContentLayout(ymaps)
   });
 
   objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
 
+
   loadList().then(data => {
     objectManager.add(data);
-  });
+  }).then(()=>{
+  objectManager.clusters.each(function (cluster) {
+        console.info(cluster.properties.geoObjects.length);
+        for (let station of cluster.properties.geoObjects) {
+          if (!station.isActive) {
+            cluster.options.preset = 'islands#redClusterIcons';
+          }
+        }
+        return;
+       }
+     )
+    }
+  );
+
   myMap.geoObjects.add(objectManager);
 
+  
   // details
   objectManager.objects.events.add('click', event => {
     const objectId = event.get('objectId');
@@ -39,8 +54,9 @@ function initMap(ymaps, containerId) {
         console.log("Data set")
         objectManager.objects.balloon.open(objectId);
       });
-    }
+    } else {
     objectManager.objects.balloon.open(objectId);
+    }
   });
 
 
