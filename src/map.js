@@ -2,7 +2,7 @@ import { loadList, loadDetails } from './api';
 import { getDetailsContentLayout } from './details';
 import { createFilterControl } from './filter';
 
-export function initMap(ymaps, containerId) {
+function initMap(ymaps, containerId) {
   const myMap = new ymaps.Map(containerId, {
     center: [55.76, 37.64],
     controls: [],
@@ -24,30 +24,36 @@ export function initMap(ymaps, containerId) {
   loadList().then(data => {
     objectManager.add(data);
   });
+  myMap.geoObjects.add(objectManager);
 
   // details
   objectManager.objects.events.add('click', event => {
     const objectId = event.get('objectId');
     const obj = objectManager.objects.getById(objectId);
 
-    objectManager.objects.balloon.open(objectId);
-
     if (!obj.properties.details) {
       loadDetails(objectId).then(data => {
         obj.properties.details = data;
+        console.log("Setting data")
         objectManager.objects.balloon.setData(obj);
+        console.log("Data set")
+        objectManager.objects.balloon.open(objectId);
       });
     }
+    objectManager.objects.balloon.open(objectId);
   });
 
-  // filters
-  const listBoxControl = createFilterControl(ymaps);
-  myMap.controls.add(listBoxControl);
 
-  var filterMonitor = new ymaps.Monitor(listBoxControl.state);
-  filterMonitor.add('filters', filters => {
-    objectManager.setFilter(
-      obj => filters[obj.isActive ? 'active' : 'defective']
-    );
-  });
+//   // filters
+//   const listBoxControl = createFilterControl(ymaps);
+//   myMap.controls.add(listBoxControl);
+
+//   var filterMonitor = new ymaps.Monitor(listBoxControl.state);
+//   filterMonitor.add('filters', filters => {
+//     objectManager.setFilter(
+//       obj => filters[obj.isActive ? 'active' : 'defective']
+//     );
+//   });
 }
+
+export default initMap;
