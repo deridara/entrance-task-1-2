@@ -1,8 +1,8 @@
 import { createChart } from './chart';
 
 export function getDetailsContentLayout(ymaps) {
-   const BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
-    `<div class="details-info">
+    const BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
+        `<div class="details-info">
         {% if (properties.details) %}
             <div class="details-info">
                 <div class="details-label">base station</div>
@@ -26,37 +26,35 @@ export function getDetailsContentLayout(ymaps) {
             </div>
         {% endif %}
      </div>
-    `
-   ,
-    {
-      build: function() {
+    `, {
+            build: function () {
 
-        this.constructor.superclass.build.call(this);
+                this.constructor.superclass.build.call(this);
 
-        const { details } = this.getData().object.properties;
-        if (details) {
-          const container = this.getElement().querySelector('.details-chart');
+                const {
+                    details
+                } = this.getData().object.properties;
+                if (details) {
+                    const container = this.getElement().querySelector('.details-chart');
 
-          this.connectionChart = createChart(
-            container,
-            details.chart,
-            details.isActive
-          );
+                    this.connectionChart = createChart(
+                        container,
+                        details.chart,
+                        details.isActive
+                    );
+                }
+            },
+
+            clear: function () {
+                if (this.connectionChart) {
+                    this.connectionChart.destroy();
+                }
+
+                BalloonContentLayout.superclass.clear.call(this);
+            }
         }
+    );
 
-      },
-
-      clear: function() {
-        if (this.connectionChart) {
-          this.connectionChart.destroy();
-        }
-
-        BalloonContentLayout.superclass.clear.call(this);
-      }
-   }
-  );
-
-
-  console.info(BalloonContentLayout.superclass.build);
-  return BalloonContentLayout;
+    console.info(BalloonContentLayout.superclass.build);
+    return BalloonContentLayout;
 }
