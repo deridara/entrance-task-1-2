@@ -1,7 +1,7 @@
 import { createChart } from './chart';
 
 export function getDetailsContentLayout(ymaps) {
-  var BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
+   const BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
     `<div class="details-info">
         {% if (properties.details) %}
             <div class="details-info">
@@ -29,51 +29,43 @@ export function getDetailsContentLayout(ymaps) {
     `
    ,
     {
-//        build: function {
-
-         
-//           console.log(BalloonContentLayout); 
-//          console.log(BalloonContentLayout.superclass.build);
-// //          console.log(super.build);
-
-//          ymaps.layout.templateBased.Base.build.call(this);
-//        }
+       
 
 
-//       build: () => {
+      build: function() {
 
-//         console.log("Building layout");
+        console.log("Building layout");
 
-//         this.constructor.superclass.build.call(this);
+        this.constructor.superclass.build.call(this);
 
-//         console.log("Built layout");
+        console.log("Built layout");
 
-//         console.log(this);
+        console.log(this);
 
-//         const { details } = this.getData().object.properties;
-//         console.log("Got details");
-//         console.log(details);
-//         if (details) {
-//           const container = this.getElement().querySelector('.details-chart');
+        const { details } = this.getData().object.properties;
+        console.log("Got details");
+        console.log(details);
+        if (details) {
+          const container = this.getElement().querySelector('.details-chart');
 
-//           this.connectionChart = createChart(
-//             container,
-//             details.chart,
-//             details.isActive
-//           );
-//         }
+          this.connectionChart = createChart(
+            container,
+            details.chart,
+            details.isActive
+          );
+        }
 
 
 
-//       },
+      },
 
-//       clear: () => {
-//         if (this.connectionChart) {
-//           this.connectionChart.destroy();
-//         }
+      clear: function() {
+        if (this.connectionChart) {
+          this.connectionChart.destroy();
+        }
 
-//         BalloonContentLayout.superclass.clear.call(this);
-//       }
+        BalloonContentLayout.superclass.clear.call(this);
+      }
    }
   );
 
