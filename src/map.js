@@ -16,27 +16,27 @@ function initMap(ymaps, containerId) {
     clusterDisableClickZoom: false,
     geoObjectOpenBalloonOnClick: false,
     geoObjectHideIconOnBalloonOpen: false,
-//     geoObjectBalloonContentLayout: getDetailsContentLayout(ymaps)
+    geoObjectBalloonContentLayout: getDetailsContentLayout(ymaps)
   });
 
-  objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
+//   objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
 
+//   const clusterColorize = () => {
+//     objectManager.clusters.each(function (cluster) {
+//         for (let station of cluster.properties.geoObjects) {
+//           if (!station.isActive) {
+//             cluster.options.preset = 'islands#redClusterIcons';
+//           }
+//         }
+//         return;
+//       }
+//     )
+//   };
 
   loadList().then(data => {
     objectManager.add(data);
-  }).then(()=>{
-  objectManager.clusters.each(function (cluster) {
-        console.info(cluster.properties.geoObjects.length);
-        for (let station of cluster.properties.geoObjects) {
-          if (!station.isActive) {
-            cluster.options.preset = 'islands#redClusterIcons';
-          }
-        }
-        return;
-       }
-     )
-    }
-  );
+  });
+
 
   myMap.geoObjects.add(objectManager);
 
@@ -49,9 +49,7 @@ function initMap(ymaps, containerId) {
     if (!obj.properties.details) {
       loadDetails(objectId).then(data => {
         obj.properties.details = data;
-        console.log("Setting data")
         objectManager.objects.balloon.setData(obj);
-        console.log("Data set")
         objectManager.objects.balloon.open(objectId);
       });
     } else {
@@ -60,16 +58,24 @@ function initMap(ymaps, containerId) {
   });
 
 
-//   // filters
-//   const listBoxControl = createFilterControl(ymaps);
-//   myMap.controls.add(listBoxControl);
+  objectManager.events.add('mapchange', event => {
+    console.log('mapchange');
 
-//   var filterMonitor = new ymaps.Monitor(listBoxControl.state);
-//   filterMonitor.add('filters', filters => {
-//     objectManager.setFilter(
-//       obj => filters[obj.isActive ? 'active' : 'defective']
-//     );
-//   });
+  });
+
+
+
+
+  // filters
+  const listBoxControl = createFilterControl(ymaps);
+  myMap.controls.add(listBoxControl);
+
+  var filterMonitor = new ymaps.Monitor(listBoxControl.state);
+  filterMonitor.add('filters', filters => {
+    objectManager.setFilter(
+      obj => filters[obj.isActive ? 'active' : 'defective']
+    );
+  });
 }
 
 export default initMap;
